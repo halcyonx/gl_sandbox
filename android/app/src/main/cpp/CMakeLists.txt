@@ -33,10 +33,10 @@ endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
 include_directories(".")
 
 set(RENDERER_SRC
+        Render/Shader.cpp
         AndroidUtils.cpp
         Renderer.cpp
         RendererOpenGL.cpp
-        Render/Shader.cpp
         )
 # file(GLOB_RECURSE RENDERER_SRC "*.cpp")
 

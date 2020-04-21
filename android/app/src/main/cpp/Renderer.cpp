@@ -32,31 +32,6 @@ static void printGlString(const char* name, GLenum s)
 Renderer::Renderer()
     : mLastFrameNs(0)
 {
-    // test file reading
-    if (FILE* file = fopen("text.txt", "rb"))
-    {
-        ALOGV("text.txt file opened!");
-        char *buffer = nullptr;
-
-        // obtain file size:
-        fseek (file , 0 , SEEK_END);
-        long pos = ftell(file);
-        rewind(file);
-
-        auto nSize = static_cast<size_t>(pos);
-        // allocate memory to contain the whole file:
-        buffer = (char*) malloc (sizeof(char)*nSize + 1);
-
-        size_t result = fread(buffer, 1, nSize, file);
-        if (result == nSize) {
-            buffer[nSize] = 0;
-            ALOGV("File successfully read: %s", buffer);
-        } else {
-            ALOGE("File reading failed");
-        }
-
-        fclose(file);
-    }
 }
 
 Renderer::~Renderer()
@@ -103,6 +78,7 @@ Java_com_android_glrenderer_GameJNILib_Init(JNIEnv* env, jclass clazz, jobject a
 
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));
+    ALOGV("[here3] Java_com_android_glrenderer_GameJNILib_Init");
 
     printGlString("Version", GL_VERSION);
     printGlString("Vendor", GL_VENDOR);
@@ -136,6 +112,7 @@ Java_com_android_glrenderer_GameJNILib_Render(JNIEnv* env, jobject obj)
 JNIEXPORT void JNICALL
 Java_com_android_glrenderer_GameJNILib_Shutdown(JNIEnv* env, jobject obj)
 {
+    ALOGV("[here3] Java_com_android_glrenderer_GameJNILib_Shutdown");
     if (androidJavaAssetManager) {
         (*env).DeleteGlobalRef(androidJavaAssetManager);
         androidJavaAssetManager = nullptr;

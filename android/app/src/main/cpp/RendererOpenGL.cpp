@@ -4,6 +4,14 @@
 #include <EGL/egl.h>
 #include <fstream>
 #include <sstream>
+#include <clocale>
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 GLfloat vertices[] = {
         // positions          // colors           // texture coords
@@ -17,6 +25,38 @@ unsigned int indices[] = {
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
 };
+
+std::string TestOpenFile(const std::string& path)
+{
+    std::string str;
+    if (FILE* file = fopen(path.c_str(), "rb"))
+    {
+        ALOGV("%s file opened!", path.c_str());
+        char *buffer = nullptr;
+
+        // obtain file size:
+        fseek (file , 0 , SEEK_END);
+        long pos = ftell(file);
+        rewind(file);
+
+        auto nSize = static_cast<size_t>(pos);
+        // allocate memory to contain the whole file:
+        buffer = (char*) malloc (sizeof(char)*nSize + 1);
+
+        size_t result = fread(buffer, 1, nSize, file);
+        if (result == nSize) {
+            buffer[nSize] = 0;
+            ALOGV("File successfully read: %s", buffer);
+        } else {
+            ALOGE("File reading failed");
+        }
+
+        str = std::string(buffer);
+
+        fclose(file);
+    }
+    return str;
+}
 
 class RendererOpenGL: public Renderer {
 public:
@@ -35,8 +75,8 @@ private:
     GLuint _vbo = 0;
     GLuint _vao = 0;
     GLuint _ebo = 0;
+    GLuint _program = 0;
     GLfloat _time = 0.0f;
-    Render::Shader _shader;
 };
 
 Renderer* CreateOpenGLRenderer()
@@ -58,21 +98,24 @@ RendererOpenGL::RendererOpenGL()
 bool FileExists(const std::string& path)
 {
     std::ifstream fs(path);
+    if (errno)
+    {
+        ALOGV("errno: %d", errno);
+        ALOGV("errno str: %s", std::strerror(errno));
+    }
+
     return fs.is_open();
 }
 
-std::string GetShaderStr(const std::string& path)
+std::string GetFileSrc(const std::string& path)
 {
     if (!FileExists(path))
     {
-        ALOGV("[GetShaderStr] file %s does not exits!", path.c_str());
-    }
-
-    if (!FileExists("text.txt"))
-    {
-        ALOGV("[GetShaderStr] file text.txt does not exits!");
+        ALOGE("[GetShaderStr] file %s does not exits!", path.c_str());
         return "";
     }
+
+    ALOGE("[GetShaderStr] file %s opened", path.c_str());
 
     std::ifstream shaderFile;
     shaderFile.open(path);
@@ -85,7 +128,14 @@ std::string GetShaderStr(const std::string& path)
 
 bool RendererOpenGL::Initialize()
 {
-    _shader.LoadFromSource("shaders/simple.glsl");
+    ALOGV("[here3] RendererOpenGL::Initialize()");
+    std::string src1 = GetFileSrc("text.txt");
+    std::string src2 = GetFileSrc("shaders/simple.glsl");
+
+    const std::string vs = GetFileSrc("shaders/simple.vs");
+    const std::string fs = GetFileSrc("shaders/simple.fs");
+
+    _program = createProgram(vs.c_str(), fs.c_str());
 
     ///
     glGenVertexArrays(1, &_vao);
@@ -137,13 +187,7 @@ RendererOpenGL::~RendererOpenGL()
 
 void RendererOpenGL::Draw()
 {
-    _shader.Bind();
-    _shader.SetUniform("time", _time);
-    Math::Vec2 res;
-    res[0] = _resolution[0];
-    res[1] = _resolution[1];
-    _shader.SetUniform("resolution", res);
-
+    glUseProgram(_program);
     glBindVertexArray(_vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
@@ -161,3 +205,4 @@ void RendererOpenGL::Step() {
 
     mLastFrameNs = nowNs;
 }
+
