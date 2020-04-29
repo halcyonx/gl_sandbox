@@ -9,6 +9,7 @@
 
 #include "AndroidUtils.h"
 #include "Renderer.h"
+#include "Log.h"
 
 bool CheckGlError(const char* funcName)
 {
@@ -62,19 +63,27 @@ static jobject androidJavaAssetManager = nullptr;
 
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_android_glrenderer_GameJNILib_Init(JNIEnv* env, jclass clazz, jobject assetManager);
+    JNIEXPORT void JNICALL Java_com_android_glrenderer_GameJNILib_Init(JNIEnv *env, jclass clazz,
+                                                                       jobject assetManager,
+                                                                       jstring apkPath);
     JNIEXPORT void JNICALL Java_com_android_glrenderer_GameJNILib_Resize(JNIEnv* env, jobject obj, jint width, jint height);
     JNIEXPORT void JNICALL Java_com_android_glrenderer_GameJNILib_Render(JNIEnv* env, jobject obj);
     JNIEXPORT void JNICALL Java_com_android_glrenderer_GameJNILib_Shutdown(JNIEnv* env, jobject obj);
 };
 
 JNIEXPORT void JNICALL
-Java_com_android_glrenderer_GameJNILib_Init(JNIEnv* env, jclass clazz, jobject assetManager)
+Java_com_android_glrenderer_GameJNILib_Init(JNIEnv *env, jclass clazz, jobject assetManager,
+                                            jstring apkPath)
 {
     if (gRenderer) {
         delete gRenderer;
         gRenderer = nullptr;
     }
+
+    if (const char *utf8 = (*env).GetStringUTFChars(apkPath, nullptr)) {
+        ALOGV("ApkPath: %s", utf8);
+    }
+
 
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));

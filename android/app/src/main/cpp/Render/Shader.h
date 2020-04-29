@@ -1,13 +1,12 @@
 #pragma once
 
-#include <string_view>
-#include "Renderer.h"
+#include <string>
 
 class Shader
 {
 public:
-    void LoadFromFile(const std::string_view vsPath, const std::string_view fsPath);
+    void LoadFromFile(const std::string vsPath, const std::string fsPath);
     void Bind();
 private:
-    GLuint _program;
+    uint32_t _program;
 };

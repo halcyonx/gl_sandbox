@@ -1,5 +1,4 @@
 #pragma once
-#include <android/log.h>
 #include <math.h>
 
 #if __ANDROID_API__ >= 23
@@ -10,15 +9,6 @@
 #include <GLES3/gl3.h>
 #endif
 
-#define DEBUG 1
-
-#define LOG_TAG "GL_TESTED"
-#define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
-#if DEBUG
-#define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
-#else
-#define ALOGV(...)
-#endif
 
 // ----------------------------------------------------------------------------
 // Types, functions, and data used by both ES2 and ES3 renderers.

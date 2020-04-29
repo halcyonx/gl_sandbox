@@ -1,7 +1,11 @@
 #include "Shader.h"
+#include "AndroidUtils.h"
+#include "Log.h"
+#include "Renderer.h"
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
+#include <exception>
 
 bool checkGlError(const char* funcName) {
     GLint err = glGetError();
@@ -90,20 +94,44 @@ GLuint createProgram(const char* vtxSrc, const char* fragSrc) {
     return program;
 }
 
-std::string LoadFileSrc(const std::string_view path)
-{
-    std::ifstream file;
-    file.open(path);
 
-    std::stringstream fileStream;
-    fileStream << file.rdbuf();
-    file.close();
-    return fileStream.str();
+std::string GetFileContent(const std::string& path)
+{
+    std::string str;
+    if (FILE* file = android_fopen(path.c_str(), "rb")) {
+        char *buffer = nullptr;
+        // obtain file size:
+        fseek (file , 0 , SEEK_END);
+        long pos = ftell(file);
+        rewind(file);
+
+        auto nSize = static_cast<size_t>(pos);
+        // allocate memory to contain the whole file:
+        buffer = (char*) malloc (sizeof(char)*nSize + 1);
+
+        size_t result = fread(buffer, 1, nSize, file);
+        if (result == nSize) {
+            buffer[nSize] = 0;
+            ALOGV("File successfully read: %s", buffer);
+        } else {
+            ALOGE("File reading failed");
+        }
+
+        str = std::string(buffer);
+
+        fclose(file);
+    }
+    else {
+        ALOGE("Failed to open: %s", path.c_str());
+    }
+    return str;
 }
 
-void Shader::LoadFromFile(const std::string_view vsPath, const std::string_view fsPath) {
-    const std::string& vertexSrc = LoadFileSrc(vsPath);
-    const std::string& fragmentSrc = LoadFileSrc(fsPath);
+void Shader::LoadFromFile(const std::string vsPath, const std::string fsPath) {
+    const std::string& vertexSrc = GetFileContent(vsPath);
+    const std::string& fragmentSrc = GetFileContent(fsPath);
+    ALOGV("vertexSrc: %s\n\n", vertexSrc.c_str());
+    ALOGV("fragmentSrc: %s\n\n", fragmentSrc.c_str());
     _program = createProgram(vertexSrc.c_str(), fragmentSrc.c_str());
 }
 

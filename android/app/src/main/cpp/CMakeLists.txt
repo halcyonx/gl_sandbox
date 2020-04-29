@@ -21,7 +21,7 @@ project(glrenderer)
 #   [24, infinite)   ES2 & ES3 & Vulkan
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fno-rtti -fno-exceptions -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17  -Wall")
 if (${ANDROID_PLATFORM_LEVEL} LESS 12)
   message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 \
                       (currently using ${ANDROID_PLATFORM_LEVEL}).")
@@ -32,14 +32,8 @@ endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
 
 include_directories(".")
 
-set(RENDERER_SRC
 
-        AndroidUtils.cpp
-        Renderer.cpp
-        RendererOpenGL.cpp
-        Render/Shader.cpp
-        )
-# file(GLOB_RECURSE RENDERER_SRC "*.cpp")
+file(GLOB_RECURSE RENDERER_SRC "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
 

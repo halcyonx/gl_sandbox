@@ -20,7 +20,8 @@ class MainSurfaceView extends GLSurfaceView
         setEGLContextClientVersion(3);
 
         assetManager = context.getAssets();
-        setRenderer(new Renderer(assetManager));
+        String apkPath = context.getApplicationInfo().sourceDir;
+        setRenderer(new Renderer(assetManager, apkPath));
     }
 
     public void onDestroy()
@@ -31,10 +32,12 @@ class MainSurfaceView extends GLSurfaceView
     private static class Renderer implements GLSurfaceView.Renderer
     {
         AssetManager assetMgr;
+        String apkPath;
 
-        public Renderer(AssetManager assetManager)
+        public Renderer(AssetManager assetManager, String sourceDir)
         {
             assetMgr = assetManager;
+            apkPath = sourceDir;
         }
 
         public void onDrawFrame(GL10 gl)
@@ -49,7 +52,7 @@ class MainSurfaceView extends GLSurfaceView
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config)
         {
-            GameJNILib.Init(assetMgr);
+            GameJNILib.Init(assetMgr, apkPath);
         }
     }
 }
