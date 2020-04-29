@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include <stdlib.h>
 #include <sstream>
+#include <fstream>
 
 bool checkGlError(const char* funcName) {
     GLint err = glGetError();
@@ -92,11 +93,11 @@ GLuint createProgram(const char* vtxSrc, const char* fragSrc) {
 std::string LoadFileSrc(const std::string_view path)
 {
     std::ifstream file;
-    file.open(path.)
+    file.open(path);
 
     std::stringstream fileStream;
-    fileStream << shaderFile.rdbuf();
-    shaderFile.close();
+    fileStream << file.rdbuf();
+    file.close();
     return fileStream.str();
 }
 

@@ -77,6 +77,7 @@ private:
     GLuint _ebo = 0;
     GLuint _program = 0;
     GLfloat _time = 0.0f;
+    Shader _shader;
 };
 
 Renderer* CreateOpenGLRenderer()
@@ -135,7 +136,8 @@ bool RendererOpenGL::Initialize()
     const std::string vs = GetFileSrc("shaders/simple.vs");
     const std::string fs = GetFileSrc("shaders/simple.fs");
 
-    _program = createProgram(vs.c_str(), fs.c_str());
+    //_program = createProgram(vs.c_str(), fs.c_str());
+    _shader.LoadFromFile("shaders/simple.vs", "shaders/simple.fs");
 
     ///
     glGenVertexArrays(1, &_vao);
