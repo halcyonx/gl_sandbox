@@ -10,6 +10,8 @@
 #include "AndroidUtils.h"
 #include "Renderer.h"
 #include "Log.h"
+#include "Utils.h"
+#include "glutils.h"
 
 bool CheckGlError(const char* funcName)
 {
@@ -44,7 +46,7 @@ void Renderer::Render()
     glClearColor(0.3f, 0.1f, 0.67f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     Draw();
-    CheckGlError("Renderer::Render");
+    GL_CHECK_ERRORS
 }
 
 // ----------------------------------------------------------------------------

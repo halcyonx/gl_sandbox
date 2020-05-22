@@ -13,6 +13,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "glutils.h"
 
 GLfloat vertices[] = {
         // positions          // colors           // texture coords
@@ -35,7 +36,7 @@ public:
     bool Initialize();
 
 protected:
-    virtual void Draw();
+    virtual void Draw() override;
     virtual void Step() override;
 
 private:

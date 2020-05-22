@@ -20,7 +20,12 @@ cmake_minimum_required(VERSION 3.4.1)
 #   [24, infinite)   ES2 & ES3 & Vulkan
 
 project(glrenderer)
-add_definitions(-DPLATFORM_ANDROID)
+
+if (WIN32)
+    include(cmake/win_config.cmake)
+elseif (ANDROID)
+    include(cmake/android_config.cmake)
+endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17  -Wall")

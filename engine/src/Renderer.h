@@ -1,28 +1,6 @@
 #pragma once
 #include <math.h>
-
-#if __ANDROID_API__ >= 23
-#include <GLES3/gl32.h>
-#elif __ANDROID_API__ >= 21
-#include <GLES3/gl31.h>
-#else
-#include <GLES3/gl3.h>
-#endif
-
-
-// ----------------------------------------------------------------------------
-// Types, functions, and data used by both ES2 and ES3 renderers.
-
-// This demo uses three coordinate spaces:
-// - The model (a quad) is in a [-1 .. 1]^2 space
-// - Scene space is either
-//    landscape: [-1 .. 1] x [-1/(2*w/h) .. 1/(2*w/h)]
-//    portrait:  [-1/(2*h/w) .. 1/(2*h/w)] x [-1 .. 1]
-// - Clip space in OpenGL is [-1 .. 1]^2
-
-// returns true if a GL error occurred
-extern bool CheckGlError(const char* funcName);
-
+#include <cstdint>
 // ----------------------------------------------------------------------------
 // Interface to the renderer implementation, used by JNI code.
 
@@ -36,8 +14,8 @@ public:
     void Resize(int w, int h);
     void Render();
 
-    uint64_t mLastFrameNs = 0;
-    GLfloat _resolution[2];
+    uint32_t mLastFrameNs = 0;
+    float _resolution[2];
 };
 
 extern Renderer* CreateOpenGLRenderer();
