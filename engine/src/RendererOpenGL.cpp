@@ -65,22 +65,10 @@ RendererOpenGL::RendererOpenGL()
 {
 }
 
-bool FileExists(const std::string& path)
-{
-    std::ifstream fs(path);
-    if (errno)
-    {
-        ALOGV("errno: %d", errno);
-        ALOGV("errno str: %s", std::strerror(errno));
-    }
-
-    return fs.is_open();
-}
-
-
 bool RendererOpenGL::Initialize()
 {
-    ALOGV("[here3] RendererOpenGL::Initialize()");
+    LOG_INFO("RendererOpenGL::Initialize()");
+    LOG_INFO("Using OpenGL ES 3.0 renderer");
 
     //_program = createProgram(vs.c_str(), fs.c_str());
     _shader.LoadFromFile("shaders/simple.vs", "shaders/simple.fs");
@@ -115,7 +103,6 @@ bool RendererOpenGL::Initialize()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
-    ALOGV("Using OpenGL ES 3.0 renderer");
     return true;
 }
 

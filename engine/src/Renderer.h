@@ -29,18 +29,14 @@ extern bool CheckGlError(const char* funcName);
 class Renderer
 {
 public:
-    virtual ~Renderer();
+    Renderer() = default;
+    virtual ~Renderer() = default;
+    virtual void Draw() = 0;
+    virtual void Step() = 0;
     void Resize(int w, int h);
     void Render();
 
-protected:
-    Renderer();
-
-    virtual void Draw() = 0;
-
-    virtual void Step() = 0;
-
-    uint64_t mLastFrameNs;
+    uint64_t mLastFrameNs = 0;
     GLfloat _resolution[2];
 };
 

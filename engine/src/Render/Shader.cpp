@@ -1,11 +1,12 @@
 #include "Shader.h"
 #include "AndroidUtils.h"
-#include "Log.h"
+#include <Log.h>
 #include "Renderer.h"
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
 #include <exception>
+
 
 bool checkGlError(const char* funcName) {
     GLint err = glGetError();

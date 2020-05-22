@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.4.1)
-project(glrenderer)
 # set targetPlatform, will be passed in from gradle when this sample is completed
 # openGL Supportability
 # platform         status
@@ -20,6 +19,9 @@ project(glrenderer)
 #                    detection.
 #   [24, infinite)   ES2 & ES3 & Vulkan
 
+project(glrenderer)
+add_definitions(-DPLATFORM_ANDROID)
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17  -Wall")
 if (${ANDROID_PLATFORM_LEVEL} LESS 12)
@@ -30,10 +32,7 @@ else ()
   set(OPENGL_LIB GLESv3)
 endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
 
-include_directories(".")
-
-
-file(GLOB_RECURSE RENDERER_SRC "*.cpp")
+file(GLOB_RECURSE RENDERER_SRC "engine/*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
 
@@ -45,4 +44,4 @@ target_link_libraries(${PROJECT_NAME}
             log
             m)
 
-target_include_directories(${PROJECT_NAME} PUBLIC "deps/glm")
+target_include_directories(${PROJECT_NAME} PUBLIC "engine/src")
