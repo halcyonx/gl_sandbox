@@ -1,3 +1,4 @@
+#ifdef PLATFORM_ANDROID
 #include <jni.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,3 +90,4 @@ Java_com_android_glrenderer_GameJNILib_Shutdown(JNIEnv* env, jobject obj)
         android_fopen_set_asset_manager(nullptr);
     }
 }
+#endif

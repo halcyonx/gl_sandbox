@@ -17,4 +17,8 @@
 #define ALOGV(...)
 
 #endif
+#elif PLATFORM_WINDOWS
+#define LOG_INFO(...)
+#define LOG_ERROR(...)
 #endif
+

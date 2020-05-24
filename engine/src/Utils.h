@@ -13,4 +13,15 @@ namespace utils
 {
     std::string GetFileContent(const std::string& path);
     void GLErrorsCheck(const char *filename, int line);
+
+	class Constants
+	{
+	public:
+		static Constants& Instance();
+		std::string GetAssetsRootPath() const;
+	private:
+		Constants();
+		
+		std::string assetsRootPath;
+	};
 }

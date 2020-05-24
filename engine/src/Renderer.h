@@ -18,4 +18,5 @@ protected:
     uint32_t mLastFrameNs = 0;
     float _resolution[2];
 };
+
 extern Renderer* CreateOpenGLRenderer();

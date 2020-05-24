@@ -7,24 +7,24 @@ static Renderer* gRenderer = nullptr;
 
 void ApplicationBase::InitializeRenderer()
 {
-    if (gRenderer) {
-        delete gRenderer;
-        gRenderer = nullptr;
-    }
+	if (gRenderer) {
+		delete gRenderer;
+		gRenderer = nullptr;
+	}
 
-    gRenderer = CreateOpenGLRenderer();
+	gRenderer = CreateOpenGLRenderer();
 }
 
 void ApplicationBase::MainLoopContent()
 {
-    if (gRenderer) {
-        gRenderer->Render();
-    }
+	if (gRenderer) {
+		gRenderer->Render();
+	}
 }
 
 void ApplicationBase::Resize(int width, int height)
 {
-    if (gRenderer) {
-        gRenderer->Resize(width, height);
-    }
+	if (gRenderer) {
+		gRenderer->Resize(width, height);
+	}
 }

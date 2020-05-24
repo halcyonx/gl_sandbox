@@ -1,20 +1,12 @@
-#include "Renderer.h"
+#include "RendererOpenGL.h"
 #include "Log.h"
 #include "AndroidUtils.h"
 #include "Render/Shader.h"
-#include <EGL/egl.h>
-#include <fstream>
-#include <sstream>
 #include <clocale>
-#include <unistd.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "glutils.h"
 #include "Utils.h"
+
 
 static void PrintGlString(const char* name, GLenum s)
 {
@@ -23,11 +15,11 @@ static void PrintGlString(const char* name, GLenum s)
 }
 
 GLfloat vertices[] = {
-        // positions          // colors           // texture coords
-        0.8f,  0.8f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-        0.8f, -0.8f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.8f, -0.8f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.8f,  0.8f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+    // positions          // colors           // texture coords
+    0.8f,  0.8f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+    0.8f, -0.8f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+    -0.8f, -0.8f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+    -0.8f,  0.8f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
 };
 
 unsigned int indices[] = {
@@ -36,7 +28,7 @@ unsigned int indices[] = {
 };
 
 
-class RendererOpenGL: public Renderer {
+class RendererOpenGL : public Renderer {
 public:
     RendererOpenGL();
     virtual ~RendererOpenGL();
@@ -49,8 +41,9 @@ protected:
     virtual void Render() override;
 
 private:
-
+#ifdef PLATFORM_ANDROID
     const EGLContext _eglContext;
+#endif
 
     GLuint _vbo = 0;
     GLuint _vao = 0;
@@ -61,9 +54,8 @@ private:
 
 Renderer* CreateOpenGLRenderer()
 {
-    const char* versionStr = (const char*)glGetString(GL_VERSION);
     RendererOpenGL* renderer = nullptr;
-    if (strstr(versionStr, "OpenGL ES 3.") ) {
+    if (const char* versionStr = (const char*)glGetString(GL_VERSION)) {
         renderer = new RendererOpenGL;
         if (!renderer->Initialize()) {
             delete renderer;
@@ -73,17 +65,24 @@ Renderer* CreateOpenGLRenderer()
         PrintGlString("Vendor", GL_VENDOR);
         PrintGlString("Renderer", GL_RENDERER);
         PrintGlString("Extensions", GL_EXTENSIONS);
-    } else {
+    }
+    else {
         LOG_ERROR("Unsupported OpenGL ES version");
     }
 
     return renderer;
 }
 
+#ifdef PLATFORM_WINDOWS
+RendererOpenGL::RendererOpenGL()
+{
+}
+#elif PLATFORM_ANDROID
 RendererOpenGL::RendererOpenGL()
     : _eglContext(eglGetCurrentContext())
 {
 }
+#endif
 
 bool RendererOpenGL::Initialize()
 {
@@ -133,10 +132,12 @@ RendererOpenGL::~RendererOpenGL()
      * If the context exists, it must be current. This only happens when we're
      * cleaning up after a failed init().
      */
+#ifdef PLATFORM_ANDROID
     if (eglGetCurrentContext() != _eglContext)
     {
         return;
     }
+#endif
 }
 
 void RendererOpenGL::Draw()
@@ -147,17 +148,17 @@ void RendererOpenGL::Draw()
 }
 
 void RendererOpenGL::Step() {
-    timespec now;
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    auto nowNs = now.tv_sec*1000000000ull + now.tv_nsec;
-
-    if (mLastFrameNs > 0)
-    {
-        float dt = float(nowNs - mLastFrameNs) * 0.00000001f;
-        _time += 0.01f;
-    }
-
-    mLastFrameNs = nowNs;
+    // timespec now;
+    // clock_gettime(CLOCK_MONOTONIC, &now);
+    // auto nowNs = now.tv_sec * 1000000000ull + now.tv_nsec;
+    //
+    // if (mLastFrameNs > 0)
+    // {
+    //     float dt = float(nowNs - mLastFrameNs) * 0.00000001f;
+    //     _time += 0.01f;
+    // }
+    //
+    // mLastFrameNs = nowNs;
 }
 
 void RendererOpenGL::Resize(int w, int h) {
@@ -169,9 +170,8 @@ void RendererOpenGL::Resize(int w, int h) {
 void RendererOpenGL::Render() {
     Step();
 
-    glClearColor(0.3f, 0.1f, 0.67f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     Draw();
     GL_CHECK_ERRORS
 }
-

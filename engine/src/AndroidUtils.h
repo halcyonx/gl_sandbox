@@ -1,6 +1,6 @@
 #ifndef ANDROID_FOPEN_H
 #define ANDROID_FOPEN_H
-
+#ifdef PLATFORM_ANDROID
 #include <stdio.h>
 #include <android/asset_manager.h>
 
@@ -16,5 +16,5 @@ FILE* android_fopen(const char* fname, const char* mode);
 #ifdef __cplusplus
 }
 #endif
-
+#endif
 #endif

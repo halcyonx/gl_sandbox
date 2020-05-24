@@ -1,52 +1,70 @@
 cmake_minimum_required(VERSION 3.6)
 # set targetPlatform, will be passed in from gradle when this sample is completed
 # openGL Supportability
-# platform         status
-#   (0 12)           ES2/ES3 not supported
-#   [12, 18)         ES2 only; for ES3, app do dynamic load/detection
-#                    this applies to the situations that:
-#                        - minimum API is set to less than 18. In this case
-#                          there is no ES3 header/lib support inside NDK
-#                        - the built APK might be running on newer API phones
-#                    with dynamic loading of ES3, the same APK would still be able
-#                    to use ES3. Otherwise, app would stuck with ES2 even phone is
-#                    is newer than the minimum API level (for example, Android-27 etc).
+# platform		 status
+#   (0 12)		   ES2/ES3 not supported
+#   [12, 18)		 ES2 only; for ES3, app do dynamic load/detection
+#					this applies to the situations that:
+#						- minimum API is set to less than 18. In this case
+#						  there is no ES3 header/lib support inside NDK
+#						- the built APK might be running on newer API phones
+#					with dynamic loading of ES3, the same APK would still be able
+#					to use ES3. Otherwise, app would stuck with ES2 even phone is
+#					is newer than the minimum API level (for example, Android-27 etc).
 #
-#   [18, 24)         ES2 & ES3
-#                    If app is built to only support API-18 or later,
-#                    set minimum api level to 18 is good enough, NDK supprts ES3
-#                    with the right header and lib files. No need to use ES3 dynamic
-#                    detection.
+#   [18, 24)		 ES2 & ES3
+#					If app is built to only support API-18 or later,
+#					set minimum api level to 18 is good enough, NDK supprts ES3
+#					with the right header and lib files. No need to use ES3 dynamic
+#					detection.
 #   [24, infinite)   ES2 & ES3 & Vulkan
 
 project(glrenderer)
 
 if (WIN32)
-    include(cmake/win_config.cmake)
+  include(cmake/win_config.cmake)
+	set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+	set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+	set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+	add_subdirectory("engine/deps/glad")
+	add_subdirectory("engine/deps/glfw")
 elseif (ANDROID)
-    include(cmake/android_config.cmake)
+	include(cmake/android_config.cmake)
+	if (${ANDROID_PLATFORM_LEVEL} LESS 12)
+	  message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 \
+						  (currently using ${ANDROID_PLATFORM_LEVEL}).")
+	  return()
+	else ()
+	  set(OPENGL_LIB GLESv3)
+	endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17  -Wall")
-if (${ANDROID_PLATFORM_LEVEL} LESS 12)
-  message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 \
-                      (currently using ${ANDROID_PLATFORM_LEVEL}).")
-  return()
-else ()
-  set(OPENGL_LIB GLESv3)
-endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
 
 file(GLOB_RECURSE RENDERER_SRC "engine/*.cpp")
 
-add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
+if (WIN32)
+	add_library(${PROJECT_NAME} STATIC ${RENDERER_SRC})
 
-# Include libraries needed for glrenderer lib
-target_link_libraries(${PROJECT_NAME}
-            ${OPENGL_LIB}
-            android
-            EGL
-            log
-            m)
+	target_link_libraries(${PROJECT_NAME} glad glfw)
+	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glad/include")
+	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glfw/include")
+	set(SANDBOX_SRC sandbox/src)
+
+	file(GLOB_RECURSE SANDBOX_SRC "sandbox/src/*.cpp")
+  add_executable(sandbox ${SANDBOX_SRC})
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sandbox)
+  target_link_libraries(sandbox glrenderer)
+elseif (ANDROID)
+	add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
+	# Include libraries needed for glrenderer lib
+	target_link_libraries(${PROJECT_NAME}
+				${OPENGL_LIB}
+				android
+				EGL
+				log
+				m)
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC "engine/src")

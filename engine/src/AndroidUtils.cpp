@@ -1,4 +1,5 @@
 #include "AndroidUtils.h"
+#ifdef PLATFORM_ANDROID
 #include <stdio.h>
 #include <errno.h>
 #include <android/asset_manager.h>
@@ -38,3 +39,4 @@ FILE* android_fopen(const char* fname, const char* mode) {
 
     return funopen(asset, android_read, android_write, android_seek, android_close);
 }
+#endif
