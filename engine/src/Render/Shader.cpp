@@ -1,6 +1,5 @@
 #include "Shader.h"
 #include "AndroidUtils.h"
-#include "Renderer.h"
 #include "Log.h"
 #include "Utils.h"
 #include <stdlib.h>

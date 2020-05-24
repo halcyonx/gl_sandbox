@@ -52,7 +52,7 @@ class MainSurfaceView extends GLSurfaceView
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config)
         {
-            GameJNILib.Init(assetMgr, apkPath);
+            GameJNILib.Initialize(assetMgr, apkPath);
         }
     }
 }

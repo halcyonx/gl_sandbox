@@ -14,6 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "glutils.h"
+#include "Utils.h"
+
+static void PrintGlString(const char* name, GLenum s)
+{
+    const char* v = (const char*)glGetString(s);
+    LOG_INFO("GL %s: %s\n", name, v);
+}
 
 GLfloat vertices[] = {
         // positions          // colors           // texture coords
@@ -38,6 +45,8 @@ public:
 protected:
     virtual void Draw() override;
     virtual void Step() override;
+    virtual void Resize(int w, int h) override;
+    virtual void Render() override;
 
 private:
 
@@ -52,12 +61,22 @@ private:
 
 Renderer* CreateOpenGLRenderer()
 {
-    RendererOpenGL* renderer = new RendererOpenGL;
-    if (!renderer->Initialize())
-    {
-        delete renderer;
-        return nullptr;
+    const char* versionStr = (const char*)glGetString(GL_VERSION);
+    RendererOpenGL* renderer = nullptr;
+    if (strstr(versionStr, "OpenGL ES 3.") ) {
+        renderer = new RendererOpenGL;
+        if (!renderer->Initialize()) {
+            delete renderer;
+            return nullptr;
+        }
+        PrintGlString("Version", GL_VERSION);
+        PrintGlString("Vendor", GL_VENDOR);
+        PrintGlString("Renderer", GL_RENDERER);
+        PrintGlString("Extensions", GL_EXTENSIONS);
+    } else {
+        LOG_ERROR("Unsupported OpenGL ES version");
     }
+
     return renderer;
 }
 
@@ -71,7 +90,6 @@ bool RendererOpenGL::Initialize()
     LOG_INFO("RendererOpenGL::Initialize()");
     LOG_INFO("Using OpenGL ES 3.0 renderer");
 
-    //_program = createProgram(vs.c_str(), fs.c_str());
     _shader.LoadFromFile("shaders/simple.vs", "shaders/simple.fs");
 
     ///
@@ -140,5 +158,20 @@ void RendererOpenGL::Step() {
     }
 
     mLastFrameNs = nowNs;
+}
+
+void RendererOpenGL::Resize(int w, int h) {
+    _resolution[0] = w;
+    _resolution[1] = h;
+    glViewport(0, 0, w, h);
+}
+
+void RendererOpenGL::Render() {
+    Step();
+
+    glClearColor(0.3f, 0.1f, 0.67f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    Draw();
+    GL_CHECK_ERRORS
 }
 

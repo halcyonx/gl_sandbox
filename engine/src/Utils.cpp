@@ -22,7 +22,7 @@ namespace utils
             size_t result = fread(buffer, 1, nSize, file);
             if (result == nSize) {
                 buffer[nSize] = 0;
-                LOG_INFO("File successfully read: %s", buffer);
+                LOG_INFO("File successfully read: %s", path.c_str());
             } else {
                 LOG_ERROR("File reading failed");
             }

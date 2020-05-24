@@ -11,7 +11,7 @@ public class GameJNILib
           System.loadLibrary("glrenderer");
      }
 
-     public static native void Init(AssetManager assetManager, String apkPath);
+     public static native void Initialize(AssetManager assetManager, String apkPath);
      public static native void Resize(int width, int height);
      public static native void Render();
      public static native void Shutdown();
