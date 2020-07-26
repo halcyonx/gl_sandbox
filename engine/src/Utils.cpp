@@ -51,10 +51,10 @@ namespace utils
 		}
 #endif
 
-		
 		std::string str;
 		if (FILE* file = fopen(filePath.c_str(), "rb")) {
 			char *buffer = nullptr;
+
 			// obtain file size:
 			fseek (file , 0 , SEEK_END);
 			long pos = ftell(file);

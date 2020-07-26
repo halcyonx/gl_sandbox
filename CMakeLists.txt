@@ -21,6 +21,8 @@ cmake_minimum_required(VERSION 3.6)
 
 project(glrenderer)
 
+include(cmake/config.cmake)
+
 if (WIN32)
   include(cmake/win_config.cmake)
 	set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -37,13 +39,15 @@ elseif (ANDROID)
 	else ()
 	  set(OPENGL_LIB GLESv3)
 	endif (${ANDROID_PLATFORM_LEVEL} LESS 12)
+	# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB_RECURSE RENDERER_SRC "engine/*.cpp")
+file(GLOB_RECURSE APP_SRC "sandbox/src/application/*.cpp")
 
 if (WIN32)
 	add_library(${PROJECT_NAME} STATIC ${RENDERER_SRC})
@@ -51,16 +55,24 @@ if (WIN32)
 	target_link_libraries(${PROJECT_NAME} glad glfw)
 	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glad/include")
 	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glfw/include")
-	set(SANDBOX_SRC sandbox/src)
+	target_include_directories(${PROJECT_NAME} PUBLIC "sandbox/src")
 
-	file(GLOB_RECURSE SANDBOX_SRC "sandbox/src/*.cpp")
-  add_executable(sandbox ${SANDBOX_SRC})
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sandbox)
-  target_link_libraries(sandbox glrenderer)
+	set(SANDBOX_SRC sandbox/src)
+	list(APPEND SANDBOX_SRC "sandbox/src/platform/windows/EntryPoint.cpp" ${APP_SRC})
+	add_executable(sandbox ${SANDBOX_SRC})
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sandbox)
+	target_link_libraries(sandbox ${PROJECT_NAME})
+
 elseif (ANDROID)
+	list(APPEND RENDERER_SRC "sandbox/src/platform/android/EntryPoint.cpp" ${APP_SRC})
+	message("here ${RENDERER_SRC}")
+	message("Is android: ${ANDROID}")
 	add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
+	target_include_directories(${PROJECT_NAME} PUBLIC "sandbox/src")
+	
 	# Include libraries needed for glrenderer lib
 	target_link_libraries(${PROJECT_NAME}
+				${SANDBOX_SRCS}
 				${OPENGL_LIB}
 				android
 				EGL

@@ -5,14 +5,14 @@
 
 static Renderer* gRenderer = nullptr;
 
-void ApplicationBase::InitializeRenderer()
+void ApplicationBase::InitializeRenderer(AppDelegate* appDelegate)
 {
 	if (gRenderer) {
 		delete gRenderer;
 		gRenderer = nullptr;
 	}
 
-	gRenderer = CreateOpenGLRenderer();
+	gRenderer = CreateOpenGLRenderer(appDelegate);
 }
 
 void ApplicationBase::MainLoopContent()

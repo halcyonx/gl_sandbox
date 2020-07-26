@@ -5,7 +5,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-void Application::Start()
+void RunApplication(Application& application, AppDelegate* delegate)
+{
+	application.Start(delegate);
+}
+
+void Application::Start(AppDelegate* delegate)
 {
 	GLFWwindow* window;
 
@@ -29,7 +34,7 @@ void Application::Start()
 		exit(EXIT_FAILURE);
 	}
 
-	InitializeRenderer();
+	InitializeRenderer(delegate);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */

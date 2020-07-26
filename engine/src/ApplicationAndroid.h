@@ -4,6 +4,8 @@
 class Application : public ApplicationBase
 {
 public:
-    void Start();
+    void Start(AppDelegate* delegate);
     void Shutdown();
 };
+
+void RunApplication(AppDelegate* delegate);

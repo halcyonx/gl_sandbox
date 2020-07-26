@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+class AppDelegate;
+
 // ----------------------------------------------------------------------------
 // Interface to the renderer implementation, used by JNI code.
 
@@ -15,8 +17,7 @@ public:
     virtual void Render() = 0;
 
 protected:
-    uint32_t mLastFrameNs = 0;
     float _resolution[2];
 };
 
-extern Renderer* CreateOpenGLRenderer();
+extern Renderer* CreateOpenGLRenderer(AppDelegate* appDelegate);

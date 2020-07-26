@@ -17,11 +17,17 @@
 
 
 static Application* application = nullptr;
+static AppDelegate* appDelegate = nullptr;
 static jobject androidJavaAssetManager = nullptr;
 
-void Application::Start()
+void RunApplication(AppDelegate* delegate)
 {
-    InitializeRenderer();
+    appDelegate = delegate;
+}
+
+void Application::Start(AppDelegate* delegate)
+{
+    InitializeRenderer(delegate);
     LOG_INFO("Application started");
 }
 
@@ -50,14 +56,13 @@ Java_com_android_glrenderer_GameJNILib_Initialize(JNIEnv *env, jclass clazz, job
 
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));
-
+    LOG_INFO("GameJNILib_Initialize");
     if (application) {
         delete application;
         application = nullptr;
     }
-
     application = new Application;
-    application->Start();
+    application->Start(appDelegate);
 }
 
 JNIEXPORT void JNICALL
