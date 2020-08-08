@@ -14,6 +14,7 @@
 #include "Log.h"
 #include "Utils.h"
 #include "glutils.h"
+#include "Timer.h"
 
 
 static Application* application = nullptr;
@@ -53,6 +54,8 @@ Java_com_android_glrenderer_GameJNILib_Initialize(JNIEnv *env, jclass clazz, job
     if (const char *utf8 = (*env).GetStringUTFChars(apkPath, nullptr)) {
         LOG_INFO("ApkPath: %s", utf8);
     }
+
+    utils::initTime();
 
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));

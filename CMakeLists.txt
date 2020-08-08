@@ -46,7 +46,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB_RECURSE RENDERER_SRC "engine/*.cpp")
+file(GLOB_RECURSE RENDERER_SRC "engine/src/*.cpp")
 file(GLOB_RECURSE APP_SRC "sandbox/src/application/*.cpp")
 
 if (WIN32)

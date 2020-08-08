@@ -11,8 +11,7 @@ class Renderer
 public:
     Renderer() = default;
     virtual ~Renderer() = default;
-    virtual void Draw() = 0;
-    virtual void Step() = 0;
+    virtual float Step() = 0;
     virtual void Resize(int width, int height) = 0;
     virtual void Render() = 0;
 

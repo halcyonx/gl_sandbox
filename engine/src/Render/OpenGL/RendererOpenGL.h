@@ -8,8 +8,7 @@ namespace mars
 	{
 	public:
 		RendererOpenGL();
-		void Draw() override;
-		void Step() override;
+		float Step() override;
 		void Resize(int width, int height) override;
 		void Render() override;
 	};

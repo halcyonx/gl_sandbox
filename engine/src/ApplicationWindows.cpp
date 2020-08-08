@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <Log.h>
+#include <Timer.h>
 #ifdef PLATFORM_WINDOWS
 #include "ApplicationWindows.h"
 #include <glad/glad.h>
@@ -18,6 +19,8 @@ void Application::Start(AppDelegate* delegate)
 	if (!glfwInit()) {
 		exit(EXIT_FAILURE);
 	}
+
+	utils::initTime();
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(2130, 1080, "Hello World", NULL, NULL);
