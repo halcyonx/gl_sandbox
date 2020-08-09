@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
-#include <exception>
 #include "glutils.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 GLuint createShader(GLenum shaderType, const char* src) {
     GLuint shader = glCreateShader(shaderType);
@@ -108,3 +109,48 @@ uint32_t Shader::Compile(const std::string& vertexSource, const std::string& fra
 }
 
 
+void Shader::SetUniform(const std::string_view uniformName, int value) const
+{
+    GLint location = glGetUniformLocation(_program, std::string(uniformName).c_str());
+    assert(location >= 0);
+    glUniform1i(location, value);
+}
+
+void Shader::SetUniform(const std::string_view uniformName, float value) const
+{
+    GLint location = glGetUniformLocation(_program, std::string(uniformName).c_str());
+    assert(location >= 0);
+    glUniform1f(location, value);
+    glCheckError();
+}
+
+void Shader::SetUniform(const std::string_view uniformName, const glm::vec3& vector) const
+{
+    GLint location = glGetUniformLocation(_program, std::string(uniformName).c_str());
+    assert(location >= 0);
+    glUniform3fv(location, 1, &vector[0]);
+    glCheckError();
+}
+
+void Shader::SetUniform(const std::string_view uniformName, const glm::vec4& vector) const
+{
+    GLint location = glGetUniformLocation(_program, std::string(uniformName).c_str());
+    assert(location >= 0);
+    glUniform4fv(location, 1, &vector[0]);
+    glCheckError();
+}
+
+void Shader::SetUniform(const std::string_view uniformName, const glm::mat4& matrix) const
+{
+    GLint location = glGetUniformLocation(_program, std::string(uniformName).c_str());
+    assert(location >= 0);
+    // glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    glCheckError();
+}
+
+void Shader::SetSampler(const std::string_view samplerName, int sampler) const
+{
+    glUniform1i(glGetUniformLocation(_program, std::string(samplerName).c_str()), sampler);
+    glCheckError();
+}

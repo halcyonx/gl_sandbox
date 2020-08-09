@@ -55,6 +55,7 @@ if (WIN32)
 	target_link_libraries(${PROJECT_NAME} glad glfw)
 	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glad/include")
 	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glfw/include")
+	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glm")
 	target_include_directories(${PROJECT_NAME} PUBLIC "sandbox/src")
 
 	set(SANDBOX_SRC sandbox/src)
@@ -65,9 +66,9 @@ if (WIN32)
 
 elseif (ANDROID)
 	list(APPEND RENDERER_SRC "sandbox/src/platform/android/EntryPoint.cpp" ${APP_SRC})
-	message("here ${RENDERER_SRC}")
-	message("Is android: ${ANDROID}")
 	add_library(${PROJECT_NAME} SHARED ${RENDERER_SRC})
+
+	target_include_directories(${PROJECT_NAME} PUBLIC "engine/deps/glm")
 	target_include_directories(${PROJECT_NAME} PUBLIC "sandbox/src")
 	
 	# Include libraries needed for glrenderer lib

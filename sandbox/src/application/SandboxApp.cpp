@@ -16,7 +16,7 @@ unsigned int indices[] = {
 
 void SandboxApp::Initialize()
 {
-    _shader.LoadFromFile("shaders/standard.vs", "shaders/standard.fs");
+    _shader.LoadFromFile("shaders/transform.vs", "shaders/transform.fs");
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
@@ -48,6 +48,9 @@ void SandboxApp::Update(float dt)
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _shader.Bind();
+    glm::mat4 modelMatrix{ 1.0f };
+    modelMatrix = glm::rotate(modelMatrix, utils::getTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+    _shader.SetUniform("transform", modelMatrix);
     glBindVertexArray(_vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     GL_CHECK_ERRORS

@@ -12,3 +12,13 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #endif
+
+#define DEBUG
+
+#ifdef DEBUG
+#define glCheckError() glCheckError_(__FILE__, __LINE__) 
+#else
+#define GL_CHECK_ERRORS
+#endif
+
+void glCheckError_(const char* file, int line);
