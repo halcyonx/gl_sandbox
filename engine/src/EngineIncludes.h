@@ -2,6 +2,7 @@
 
 #include <Application.h>
 #include <Render/Shader.h>
+#include <Render/Texture.h>
 #include <glutils.h>
 #include <Timer.h>
 #include <glm/glm.hpp>

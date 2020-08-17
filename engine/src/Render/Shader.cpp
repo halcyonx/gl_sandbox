@@ -154,3 +154,19 @@ void Shader::SetSampler(const std::string_view samplerName, int sampler) const
     glUniform1i(glGetUniformLocation(_program, std::string(samplerName).c_str()), sampler);
     glCheckError();
 }
+
+void Shader::BindTexture2D(uint32_t channel, uint32_t texture)
+{
+    assert(channel < GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+    glActiveTexture(GL_TEXTURE0 + channel);
+    glCheckError();
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCheckError();
+    SetSampler(std::string("texture_") + std::to_string(channel), channel);
+}
+
+void Shader::UnbindTexture2D()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glCheckError();
+}

@@ -5,6 +5,8 @@
 #include <clocale>
 #include <chrono>
 #include <time.h>
+#include <Renderer.h>
+
 #include "glutils.h"
 #include "Utils.h"
 #include "AppDelegate.h"
@@ -119,4 +121,8 @@ void RendererOpenGL::Render()
 {
 	const float dt = Step();
 	_appDelegate->Update(dt);
+}
+
+float Renderer::GetAspectRatio() {
+	return _resolution[0] / _resolution[1];
 }

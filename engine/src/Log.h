@@ -18,7 +18,8 @@
 
 #endif
 #elif PLATFORM_WINDOWS
-#define LOG_INFO(...)
-#define LOG_ERROR(...)
+#include <cstdio>
+#define LOG_INFO(...) printf(__VA_ARGS__);
+#define LOG_ERROR(...) printf(__VA_ARGS__);
 #endif
 
