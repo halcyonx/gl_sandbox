@@ -14,7 +14,9 @@ public:
     virtual float Step() = 0;
     virtual void Resize(int width, int height) = 0;
     virtual void Render() = 0;
-    float GetAspectRatio();
+    int GetWidth() const;
+    int GetHeight() const;
+    float GetAspectRatio() const;
 
 protected:
     float _resolution[2];

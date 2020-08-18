@@ -89,6 +89,7 @@ bool RendererOpenGL::Initialize(AppDelegate* appDelegate)
 
 RendererOpenGL::~RendererOpenGL()
 {
+	delete _appDelegate;
 	/* The destructor may be called after the context has already been
 	 * destroyed, in which case our objects have already been destroyed.
 	 *
@@ -115,6 +116,7 @@ void RendererOpenGL::Resize(int w, int h) {
 	_resolution[0] = w;
 	_resolution[1] = h;
 	glViewport(0, 0, w, h);
+	LOG_INFO("Resolutuion: %d x %d, aspect: %0.3f", GetWidth(), GetHeight(), GetAspectRatio());
 }
 
 void RendererOpenGL::Render()
@@ -123,6 +125,14 @@ void RendererOpenGL::Render()
 	_appDelegate->Update(dt);
 }
 
-float Renderer::GetAspectRatio() {
+float Renderer::GetAspectRatio() const {
 	return _resolution[0] / _resolution[1];
+}
+
+int Renderer::GetHeight() const {
+    return _resolution[1];
+}
+
+int Renderer::GetWidth() const {
+    return _resolution[0];
 }

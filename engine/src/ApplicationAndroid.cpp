@@ -34,6 +34,7 @@ void Application::Start(AppDelegate* delegate)
 
 void Application::Shutdown()
 {
+    ReleaseRenderer();
     LOG_INFO("Application shutdown");
 }
 

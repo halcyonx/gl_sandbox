@@ -5,6 +5,7 @@
 class SandboxApp : public AppDelegate
 {
 public:
+	~SandboxApp() override;
 	void Initialize() override;
 	void Update(float dt) override;
 

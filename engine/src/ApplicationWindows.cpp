@@ -38,6 +38,7 @@ void Application::Start(AppDelegate* delegate)
 	}
 
 	InitializeRenderer(delegate);
+	Resize(2130, 1080);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */
@@ -55,6 +56,7 @@ void Application::Start(AppDelegate* delegate)
 
 void Application::Shutdown()
 {
+	ReleaseRenderer();
 	glfwTerminate();
 }
 

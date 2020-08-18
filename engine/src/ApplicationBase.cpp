@@ -11,8 +11,17 @@ void ApplicationBase::InitializeRenderer(AppDelegate* appDelegate)
 		delete gRenderer;
 		gRenderer = nullptr;
 	}
-
+	LOG_INFO("[Application] InitializeRenderer");
 	gRenderer = CreateOpenGLRenderer(appDelegate);
+}
+
+void ApplicationBase::ReleaseRenderer()
+{
+	if (gRenderer) {
+		delete gRenderer;
+		gRenderer = nullptr;
+		LOG_INFO("[Application] ReleaseRenderer");
+	}
 }
 
 void ApplicationBase::MainLoopContent()

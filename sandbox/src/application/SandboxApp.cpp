@@ -1,21 +1,17 @@
 #include "SandboxApp.h"
 #include <Utils.h>
 
-GLfloat vertices[] = {
-    // positions          // colors           // texture coords
-    0.8f,  0.8f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-    0.8f, -0.8f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-    -0.8f, -0.8f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-    -0.8f,  0.8f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
-};
-
-unsigned int indices[] = {
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-};
+SandboxApp::~SandboxApp()
+{
+	glDeleteVertexArrays(1, &_vao); glCheckError();
+	glDeleteBuffers(1, &_vbo); glCheckError();
+	glDeleteBuffers(1, &_ebo); glCheckError();
+	LOG_INFO("SandboxApp destroyed");
+}
 
 void SandboxApp::Initialize()
-{	
+{
+	LOG_INFO("SandboxApp initialized");
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] = {
 		// Positions          // Colors           // Texture Coords
