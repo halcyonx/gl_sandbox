@@ -10,10 +10,7 @@ public:
 	void Update(float dt) override;
 
 private:
-	GLuint _vbo = 0;
-	GLuint _vao = 0;
-	GLuint _ebo = 0;
-	GLfloat _time = 0.0f;
-	Shader _shader;
-	Core::Texture _texture_0, _texture_1;
+	GLuint _vbo, _vao, _vboBox, _vaoBox, _ebo;
+	Shader _shader, _textured;
+	Core::Texture _texture_0, _texture_1, _texture_2;
 };

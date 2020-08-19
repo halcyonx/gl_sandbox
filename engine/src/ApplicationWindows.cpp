@@ -20,7 +20,7 @@ void Application::Start(AppDelegate* delegate)
 		exit(EXIT_FAILURE);
 	}
 
-	utils::initTime();
+	utils::InitTime();
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(2130, 1080, "Hello World", NULL, NULL);

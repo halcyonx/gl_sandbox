@@ -9,17 +9,18 @@ class AppDelegate;
 class Renderer
 {
 public:
-    Renderer() = default;
-    virtual ~Renderer() = default;
-    virtual float Step() = 0;
-    virtual void Resize(int width, int height) = 0;
-    virtual void Render() = 0;
-    int GetWidth() const;
-    int GetHeight() const;
-    float GetAspectRatio() const;
-
+	Renderer() = default;
+	virtual ~Renderer() = default;
+	virtual float Step() = 0;
+	virtual void Resize(int width, int height) = 0;
+	virtual void Render() = 0;
+	int GetWidth() const;
+	int GetHeight() const;
+	float GetAspectRatio() const;
+	
 protected:
-    float _resolution[2];
+	float _resolution[2];
+	float _aspect;
 };
 
 extern Renderer* CreateOpenGLRenderer(AppDelegate* appDelegate);

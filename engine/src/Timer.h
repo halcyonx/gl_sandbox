@@ -2,6 +2,6 @@
 
 namespace utils
 {
-	void initTime();
-	float getTime();
+	void InitTime();
+	float GetTime();
 }

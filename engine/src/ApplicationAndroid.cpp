@@ -56,7 +56,7 @@ Java_com_android_glrenderer_GameJNILib_Initialize(JNIEnv *env, jclass clazz, job
         LOG_INFO("ApkPath: %s", utf8);
     }
 
-    utils::initTime();
+    utils::InitTime();
 
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));

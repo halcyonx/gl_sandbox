@@ -52,6 +52,7 @@ Renderer* CreateOpenGLRenderer(AppDelegate* appDelegate)
 			delete renderer;
 			return nullptr;
 		}
+		appDelegate->renderer = renderer;
 		PrintGlString("Version", GL_VERSION);
 		PrintGlString("Vendor", GL_VENDOR);
 		PrintGlString("Renderer", GL_RENDERER);
@@ -106,7 +107,7 @@ RendererOpenGL::~RendererOpenGL()
 
 float RendererOpenGL::Step()
 {
-	const float curTime = utils::getTime();
+	const float curTime = utils::GetTime();
 	const float dt = curTime - _lastTime;
 	_lastTime = curTime;
 	return dt;
@@ -115,6 +116,7 @@ float RendererOpenGL::Step()
 void RendererOpenGL::Resize(int w, int h) {
 	_resolution[0] = w;
 	_resolution[1] = h;
+	_aspect = _resolution[0] / _resolution[1];
 	glViewport(0, 0, w, h);
 	LOG_INFO("Resolutuion: %d x %d, aspect: %0.3f", GetWidth(), GetHeight(), GetAspectRatio());
 }
@@ -126,13 +128,13 @@ void RendererOpenGL::Render()
 }
 
 float Renderer::GetAspectRatio() const {
-	return _resolution[0] / _resolution[1];
+	return _aspect;
 }
 
 int Renderer::GetHeight() const {
-    return _resolution[1];
+	return _resolution[1];
 }
 
 int Renderer::GetWidth() const {
-    return _resolution[0];
+	return _resolution[0];
 }

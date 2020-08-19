@@ -4,8 +4,8 @@ class AppDelegate;
 class ApplicationBase
 {
 public:
-    void InitializeRenderer(AppDelegate* delegate);
-    void ReleaseRenderer();
-    void MainLoopContent();
-    void Resize(int width, int height);
+	void InitializeRenderer(AppDelegate* delegate);
+	void ReleaseRenderer();
+	void MainLoopContent();
+	void Resize(int width, int height);
 };

@@ -12,7 +12,7 @@ namespace
 	double startTimePoint = 0.0;
 }
 
-void utils::initTime()
+void utils::InitTime()
 {
 	static bool init = false;
 	assert(!init);
@@ -24,7 +24,7 @@ void utils::initTime()
 	}
 }
 
-float utils::getTime()
+float utils::GetTime()
 {
 #ifdef PLATFORM_WINDOWS
 	return glfwGetTime();
