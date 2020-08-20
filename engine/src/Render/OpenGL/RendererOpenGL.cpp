@@ -1,4 +1,3 @@
-#include "RendererOpenGL.h"
 #include "Log.h"
 #include "AndroidUtils.h"
 #include "Render/Shader.h"
