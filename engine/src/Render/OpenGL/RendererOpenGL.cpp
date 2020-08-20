@@ -15,6 +15,8 @@
 #include <iostream>
 #endif
 
+// TODO: fix android minimize/maximize crash
+
 static void PrintGlString(const char* name, GLenum s)
 {
 	const char* v = (const char*)glGetString(s);
