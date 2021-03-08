@@ -1,7 +1,7 @@
 #version 300 es
-in vec2 TexCoord;
+in mediump vec2 TexCoord;
 
-out vec4 color;
+out mediump vec4 color;
 
 uniform sampler2D texture_0;
 uniform sampler2D texture_1;
