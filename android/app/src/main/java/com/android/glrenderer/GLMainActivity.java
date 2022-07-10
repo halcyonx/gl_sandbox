@@ -49,7 +49,9 @@ public class GLMainActivity extends Activity
         decorView.setSystemUiVisibility(uiOptions);
 
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
-        attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        if (Build.VERSION.SDK_INT >= 28) {
+            attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
         getWindow().setAttributes(attributes);
     }
 }
