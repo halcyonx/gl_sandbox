@@ -7,20 +7,21 @@ static Renderer* gRenderer = nullptr;
 
 void ApplicationBase::InitializeRenderer(AppDelegate* appDelegate)
 {
-	if (gRenderer) {
-		delete gRenderer;
-		gRenderer = nullptr;
-	}
 	LOG_INFO("[Application] InitializeRenderer");
-	gRenderer = CreateOpenGLRenderer(appDelegate);
+	if (!gRenderer) {
+		gRenderer = CreateOpenGLRenderer(appDelegate);
+	}
+	else {
+		LOG_INFO("[Application] InitializeRenderer already initialized");
+	}
 }
 
 void ApplicationBase::ReleaseRenderer()
 {
 	if (gRenderer) {
+		LOG_INFO("[Application] ReleaseRenderer");
 		delete gRenderer;
 		gRenderer = nullptr;
-		LOG_INFO("[Application] ReleaseRenderer");
 	}
 }
 

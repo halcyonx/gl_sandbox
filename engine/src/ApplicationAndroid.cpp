@@ -61,12 +61,11 @@ Java_com_android_glrenderer_GameJNILib_Initialize(JNIEnv *env, jclass clazz, job
     androidJavaAssetManager = (*env).NewGlobalRef(assetManager);
     android_fopen_set_asset_manager(AAssetManager_fromJava(env, androidJavaAssetManager));
     LOG_INFO("GameJNILib_Initialize");
-    if (application) {
-        delete application;
-        application = nullptr;
+    if (!application) {
+        application = new Application();
+        LOG_INFO("Application created");
+        application->Start(appDelegate);
     }
-    application = new Application;
-    application->Start(appDelegate);
 }
 
 JNIEXPORT void JNICALL
